@@ -1,15 +1,20 @@
 *{
     margin:5px;
+    font-family: 'PT Sans', sans-serif;
 }
 p{
     margin:0;
     padding:0;
 }
 
+.red-font{
+    color:#ef233c;
+}
+
 .line{
     width:100%;
     height:3px;
-    background-color:black;
+    background-color:#ef233c;
     margin:0;
     padding:0;
 }
@@ -17,5 +22,20 @@ p{
 .receipt-container p{
     padding:10px;
     line-height:1.6;
-    bac
+    color:#2b2d42;
+    
+}
+
+.receipt-container{
+    background-color:#edf2f4;
+}
+
+.receipt-container .note{
+    color:#d90429;
+}
+
+
+.details{
+
+    line-height:2.5 !important;
 }
