@@ -21,11 +21,15 @@
         <p>Method</p> <input type="text" id="method">
         <br>
         <button class="submit">LETS GO</button>
-        <button class="save-pdf" onclick="printDiv('receipt-container','Title')"></button>
+        <button class="save-pdf" onclick="printDiv('receipt-container')">PDF</button>
+        <input type="checkbox" class="yesid"> <p>click me if you want to upload to database</p>
         <div class="receipt-container">
-
+        
             
         </div>
     </body>
-    <script src="script.js"></script>
+    
+
+      <script type="module" src="script.js"></script>
+      <script src="pdf.js"></script>
 </html>

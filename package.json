@@ -1,0 +1,23 @@
+{
+  "name": "tax-receipt-form",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hellolol2016/tax-receipt-form.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hellolol2016/tax-receipt-form/issues"
+  },
+  "homepage": "https://github.com/hellolol2016/tax-receipt-form#readme",
+  "dependencies": {
+    "firebase": "^9.0.2"
+  }
+}

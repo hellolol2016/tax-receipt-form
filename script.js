@@ -1,7 +1,78 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-analytics.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/9.0.2/firebase-database.js";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBmFj1ri_eCHhG4UXRthYjZXZO5CD5G1ig",
+  authDomain: "lotreceipt.firebaseapp.com",
+  databaseURL: "https://lotreceipt-default-rtdb.firebaseio.com",
+  projectId: "lotreceipt",
+  storageBucket: "lotreceipt.appspot.com",
+  messagingSenderId: "396882280237",
+  appId: "1:396882280237:web:2b96f2343f6e08cc029da4",
+  measurementId: "G-FVMQ8WR4LX"
+};
+
+var firebase = initializeApp(firebaseConfig);
+
+var config = {
+    apiKey: "AIzaSyBmFj1ri_eCHhG4UXRthYjZXZO5CD5G1ig",
+    authDomain: "lotreceipt.firebaseapp.com",
+    // For databases not in the us-central1 location, databaseURL will be of the
+    // form https://[databaseName].[region].firebasedatabase.app.
+    // For example, https://your-database-123.europe-west1.firebasedatabase.app
+    databaseURL: "https://lotreceipt-default-rtdb.firebaseio.com",
+    storageBucket: "lotreceipt.appspot.com"
+  };
+
+  // Get a reference to the database service
+  const db = getDatabase()
+  function uploadReceipt(num, name, amt, date, method) {
+    let ID = createID(num);
+    set(ref(db, 'receipts/' + num), {
+        ID: ID,
+        name : name,
+        amt : amt,
+        date : date,
+        method : method
+    });
+  }
+
+
+
+const receiptRef = ref(db,"receipts/");
+let curRecNum = 1;
+onValue(receiptRef, (snapshot)=>{
+    const data = snapshot.val();
+    console.log(data)
+    console.log(data.length)
+    if(data.length == undefined){
+        curRecNum = 1;
+    } else {
+        curRecNum = data.length;
+    }
+})
+
+function pad(num, size) {
+    num = num.toString();
+    while (num.length < size) num = "0" + num;
+    return num;
+}
+
+const alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  function createID(number){
+      let l = alpha.charAt((number / 999999) | 0);
+      return l + pad(number%999999, 6);
+  }
 
 const go = document.querySelector(".submit");
 const themes = ["red", "green", "blue"];
-
+const checkmark = document.querySelector('.yesid');
 function getName(){
     let name = document.querySelector("#name1").value;
     return(name)
@@ -23,22 +94,21 @@ function getDate(){
     return(date)
 }
 
-
 function getMethod(){
     let method = document.querySelector("#method").value;
     return(method)
 }
 
-
 function testAll(){
-    fn = getName();
-    ln = getName2();
-    a = getAmt();
-    d = getDate();
-    m = getMethod();
+    let fn = getName();
+    let ln = getName2();
+    let a = getAmt();
+    let d = getDate();
+    let m = getMethod();
     clearReceipt();
     createReceipt(fn, ln ,a,d, m);
 }
+
 const receipt = document.querySelector(".receipt-container");
 receipt.style.margin = "5px";
 receipt.style.fontFamily = "'PT Sans', sans-serif";
@@ -60,15 +130,15 @@ function createReceipt(fname, lname, amt, date, method){
     "<br><br>Here is a summary of your donation:";
     receipt.appendChild(intro);
 
-    color = themes[randInt(3)]
-
+    let color = themes[randInt(3)]
+    let fullName = fname + " " + lname
     let line1 = document.createElement("div");
     line1.classList.add("line");
     line1.classList.add(color);
     receipt.appendChild(line1);
     const deets = document.createElement("p")
     deets.innerHTML = "<br><b>Organization:</b> Laugh Out Together Foundation" + "<br>" + 
-    "<br><b>Donor Name:</b> " + fname + " " + lname + 
+    "<br><b>Donor Name:</b> " + fullName + 
     "<br><br><b>Amount:</b> " + amt + "<br>" + "<br><b>Date:</b> " + date + "<br>" + 
     "<br><b>Method:</b> " + method + "<br>"
     deets.classList.add("details");
@@ -86,25 +156,17 @@ function createReceipt(fname, lname, amt, date, method){
     "by Laugh Out Together in return for this contribution.</i><br><hr>"
     
     receipt.appendChild(final)
+
+    if(checkmark.checked){
+        // function uploadReceipt(num, name, amt, date, method)
+        const recID = document.createElement("p");
+        recID.innerHTML = "Receipt ID : " + createID(curRecNum);
+        receipt.appendChild(recID);
+        uploadReceipt(curRecNum, fullName, amt, date, method);
+        console.log("uploaded to database " + createID(curRecNum));
+    }
+
+    
 }
-
-function printDiv(divId,
-    title) {
-  
-    let mywindow = window.open('', 'PRINT', 'height=650,width=900,top=100,left=150');
-  
-    mywindow.document.write(`<html><head><title></title>`);
-    mywindow.document.write('</head><body >');
-    mywindow.document.write(document.querySelector("."+divId).innerHTML);
-    mywindow.document.write('</body></html>');
-  
-    mywindow.document.close(); // necessary for IE >= 10
-    mywindow.focus(); // necessary for IE >= 10*/
-  
-    mywindow.print();
-    mywindow.close();
-
-    return true;
-  }
 
 go.addEventListener("click", testAll)
